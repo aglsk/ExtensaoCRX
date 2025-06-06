@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chrome Extensions Store</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap">
+  <style>
+    :root {
+      --primary-color: #1a73e8;
+      --secondary-color: #f1f3f4;
+      --text-color: #202124;
+      --light-text: #5f6368;
+      --border-color: #dadce0;
+      --white: #ffffff;
+      --rating-color: #faab00;
+      --card-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    body {
+      font-family: 'Google Sans', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: var(--text-color);
+      background-color: var(--white);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 30px;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logo img {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .logo h1 {
+      font-size: 20px;
+      font-weight: 500;
+      margin: 0;
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 20px;
+    }
+    
+    nav a {
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+    
+    nav a:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    .search-bar {
+      display: flex;
+      margin: 30px 0;
+    }
+    
+    .search-bar input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px 0 0 4px;
+      font-size: 16px;
+    }
+    
+    .search-bar button {
+      padding: 0 20px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+    }
+    
+    .categories {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    
+    .category {
+      padding: 8px 16px;
+      background-color: var(--secondary-color);
+      border-radius: 20px;
+      font-size: 14px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    
+    .category.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .extensions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .extension-card {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .extension-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0 0 5px 0;
+    }
+    
+    .card-author {
+      font-size: 14px;
+      color: var(--light-text);
+      margin: 0 0 10px 0;
+    }
+    
+    .card-description {
+      font-size: 14px;
+      color: var(--light-text);
+      margin: 0 0 15px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .card-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-rating {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--light-text);
+      font-size: 14px;
+    }
+    
+    .stars {
+      color: var(--rating-color);
+    }
+    
+    .card-users {
+      color: var(--light-text);
+      font-size: 14px;
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 40px 0;
+    }
+    
+    .pagination button {
+      padding: 8px 16px;
+      border: 1px solid var(--border-color);
+      background-color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .pagination button.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 30px 0;
+      text-align: center;
+      color: var(--light-text);
+      font-size: 14px;
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+    
+    .modal-content {
+      background-color: white;
+      margin: 50px auto;
+      max-width: 800px;
+      border-radius: 8px;
+      padding: 30px;
+      position: relative;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    
+    @media (max-width: 768px) {
+      .extensions-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+      
+      header {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="https://via.placeholder.com/40" alt="Logo">
+        <h1>Chrome Extensions Store</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#">Início</a></li>
+          <li><a href="#">Extensões</a></li>
+          <li><a href="#">Categorias</a></li>
+          <li><a href="#">Sobre</a></li>
+        </ul>
+      </nav>
+    </header>
+    
+    <div class="search-bar">
+      <input type="text" placeholder="Buscar extensões...">
+      <button>🔍</button>
+    </div>
+    
+    <div class="categories">
+      <div class="category active">Todas</div>
+      <div class="category">Produtividade</div>
+      <div class="category">Social</div>
+      <div class="category">Ferramentas</div>
+      <div class="category">Desenvolvimento</div>
+      <div class="category">Acessibilidade</div>
+      <div class="category">Educação</div>
+    </div>
+    
+    <div class="extensions-grid">
+      <!-- Extensão 1 -->
+      <div class="extension-card" onclick="openExtensionModal('ext1')">
+        <img src="https://via.placeholder.com/48" alt="Ícone" class="card-icon">
+        <h3 class="card-title">Gerenciador de Tarefas</h3>
+        <p class="card-author">Por Extensions Inc</p>
+        <p class="card-description">Organize suas tarefas diárias diretamente no seu navegador com esta poderosa extensão de produtividade.</p>
+        <div class="card-stats">
+          <div class="card-rating">
+            <span class="stars">★★★★★</span>
+            <span>(128)</span>
+          </div>
+          <div class="card-users">50K+ usuários</div>
+        </div>
+      </div>
+      
+      <!-- Extensão 2 -->
+      <div class="extension-card" onclick="openExtensionModal('ext2')">
+        <img src="https://via.placeholder.com/48" alt="Ícone" class="card-icon">
+        <h3 class="card-title">Tradutor Instantâneo</h3>
+        <p class="card-author">Por Language Tools</p>
+        <p class="card-description">Traduza qualquer texto em páginas web com um simples clique. Suporta mais de 100 idiomas.</p>
+        <div class="card-stats">
+          <div class="card-rating">
+            <span class="stars">★★★★☆</span>
+            <span>(87)</span>
+          </div>
+          <div class="card-users">200K+ usuários</div>
+        </div>
+      </div>
+      
+      <!-- Extensão 3 -->
+      <div class="extension-card" onclick="openExtensionModal('ext3')">
+        <img src="https://via.placeholder.com/48" alt="Ícone" class="card-icon">
+        <h3 class="card-title">Bloqueador de Anúncios</h3>
+        <p class="card-author">Por Privacy Solutions</p>
+        <p class="card-description">Bloqueie anúncios, pop-ups e rastreadores para uma navegação mais rápida e segura.</p>
+        <div class="card-stats">
+          <div class="card-rating">
+            <span class="stars">★★★★★</span>
+            <span>(512)</span>
+          </div>
+          <div class="card-users">1M+ usuários</div>
+        </div>
+      </div>
+      
+      <!-- Extensão 4 -->
+      <div class="extension-card" onclick="openExtensionModal('ext4')">
+        <img src="https://via.placeholder.com/48" alt="Ícone" class="card-icon">
+        <h3 class="card-title">Gerenciador de Senhas</h3>
+        <p class="card-author">Por Security Apps</p>
+        <p class="card-description">Armazene e gerencie suas senhas de forma segura com criptografia avançada.</p>
+        <div class="card-stats">
+          <div class="card-rating">
+            <span class="stars">★★★★☆</span>
+            <span>(64)</span>
+          </div>
+          <div class="card-users">75K+ usuários</div>
+        </div>
+      </div>
+      
+      <!-- Extensão 5 -->
+      <div class="extension-card" onclick="openExtensionModal('ext5')">
+        <img src="https://via.placeholder.com/48" alt="Ícone" class="card-icon">
+        <h3 class="card-title">Modo Escuro Universal</h3>
+        <p class="card-author">Por Visual Tools</p>
+        <p class="card-description">Aplica modo escuro a qualquer site para reduzir a fadiga ocular durante a noite.</p>
+        <div class="card-stats">
+          <div class="card-rating">
+            <span class="stars">★★★☆☆</span>
+            <span>(42)</span>
+          </div>
+          <div class="card-users">30K+ usuários</div>
+        </div>
+      </div>
+      
+      <!-- Extensão 6 -->
+      <div class="extension-card" onclick="openExtensionModal('ext6')">
+        <img src="https://via.placeholder.com/48" alt="Ícone" class="card-icon">
+        <h3 class="card-title">Captura de Tela Avançada</h3>
+        <p class="card-author">Por Dev Tools</p>
+        <p class="card-description">Capture e edite screenshots diretamente no navegador com diversas ferramentas.</p>
+        <div class="card-stats">
+          <div class="card-rating">
+            <span class="stars">★★★★☆</span>
+            <span>(76)</span>
+          </div>
+          <div class="card-users">120K+ usuários</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="pagination">
+      <button>❮</button>
+      <button class="active">1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>❯</button>
+    </div>
+    
+    <footer>
+      <p>© 2023 Chrome Extensions Store. Todos os direitos reservados.</p>
+    </footer>
+  </div>
+  
+  <!-- Modal de Detalhes da Extensão -->
+  <div id="extensionModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <div id="modalContent">
+        <!-- Conteúdo será preenchido dinamicamente -->
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Dados das extensões (poderia ser carregado de uma API)
+    const extensionsData = {
+      'ext1': {
+        id: 'ext1',
+        name: 'Gerenciador de Tarefas',
+        author: 'Extensions Inc',
+        version: '2.4.1',
+        updated: '15/06/2023',
+        size: '1.2MB',
+        description: 'Organize suas tarefas diárias diretamente no seu navegador com esta poderosa extensão de produtividade. Com sincronização em nuvem, lembretes e categorização inteligente.',
+        longDescription: '<p>O Gerenciador de Tarefas é a ferramenta perfeita para quem busca aumentar sua produtividade. Com ele você pode:</p><ul><li>Criar listas de tarefas personalizadas</li><li>Definir prazos e lembretes</li><li>Sincronizar entre dispositivos</li><li>Integrar com calendários</li><li>Gerar relatórios de produtividade</li></ul>',
+        rating: 5,
+        reviews: 128,
+        users: '50K+',
+        icon: 'https://via.placeholder.com/128',
+        screenshots: [
+          'https://via.placeholder.com/600x400',
+          'https://via.placeholder.com/600x400',
+          'https://via.placeholder.com/600x400'
+        ],
+        downloadUrl: 'https://seusite.com/extensions/task-manager.crx'
+      },
+      'ext2': {
+        id: 'ext2',
+        name: 'Tradutor Instantâneo',
+        author: 'Language Tools',
+        version: '1.8.3',
+        updated: '10/05/2023',
+        size: '2.1MB',
+        description: 'Traduza qualquer texto em páginas web com um simples clique. Suporta mais de 100 idiomas.',
+        longDescription: '<p>O Tradutor Instantâneo remove as barreiras linguísticas da internet. Recursos:</p><ul><li>Tradução de texto selecionado</li><li>Tradução de páginas inteiras</li><li>Dicionário integrado</li><li>Histórico de traduções</li><li>Modo offline para idiomas populares</li></ul>',
+        rating: 4,
+        reviews: 87,
+        users: '200K+',
+        icon: 'https://via.placeholder.com/128',
+        screenshots: [
+          'https://via.placeholder.com/600x400',
+          'https://via.placeholder.com/600x400'
+        ],
+        downloadUrl: 'https://seusite.com/extensions/translator.crx'
+      }
+      // Adicione dados para as outras extensões...
+    };
+    
+    function openExtensionModal(extId) {
+      const extData = extensionsData[extId];
+      if (!extData) return;
+      
+      const modalContent = `
+        <div class="hero" style="display: flex; gap: 30px; margin-bottom: 30px; align-items: flex-start;">
+          <img src="${extData.icon}" alt="Ícone" style="width: 128px; height: 128px; border-radius: 16px;">
+          <div>
+            <h2 style="margin: 0 0 10px 0; font-size: 24px;">${extData.name}</h2>
+            <p style="color: var(--light-text); margin: 0 0 20px 0;">Oferecido por <strong>${extData.author}</strong></p>
+            <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+              <div style="display: flex; align-items: center; gap: 5px;">
+                <span style="color: var(--rating-color);">${'★'.repeat(extData.rating)}${'☆'.repeat(5-extData.rating)}</span>
+                <span>(${extData.reviews})</span>
+              </div>
+              <div>${extData.users} usuários</div>
+            </div>
+            <button onclick="downloadExtension('${extData.downloadUrl}')" style="padding: 12px 24px; background-color: var(--primary-color); color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">
+              Adicionar ao Chrome
+            </button>
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 30px;">
+          <h3 style="margin-bottom: 15px;">Descrição</h3>
+          ${extData.longDescription}
+        </div>
+        
+        <div style="margin-bottom: 30px;">
+          <h3 style="margin-bottom: 15px;">Capturas de Tela</h3>
+          <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px;">
+            ${extData.screenshots.map(img => `<img src="${img}" style="height: 200px; border-radius: 8px; border: 1px solid var(--border-color);">`).join('')}
+          </div>
+        </div>
+        
+        <div style="display: flex; gap: 40px;">
+          <div style="flex: 2;">
+            <h3 style="margin-bottom: 15px;">Como instalar</h3>
+            <ol>
+              <li>Clique em "Adicionar ao Chrome" acima</li>
+              <li>Se o download não iniciar automaticamente, <a href="${extData.downloadUrl}" download>clique aqui</a></li>
+              <li>Acesse <code>chrome://extensions</code> no seu navegador</li>
+              <li>Ative o <strong>Modo Desenvolvedor</strong> (canto superior direito)</li>
+              <li>Arraste o arquivo .crx baixado para a página de extensões</li>
+            </ol>
+          </div>
+          <div style="flex: 1;">
+            <h3 style="margin-bottom: 15px;">Informações</h3>
+            <p><strong>Versão:</strong> ${extData.version}</p>
+            <p><strong>Atualizado em:</strong> ${extData.updated}</p>
+            <p><strong>Tamanho:</strong> ${extData.size}</p>
+            <p><strong>Idiomas:</strong> Português, Inglês, Espanhol</p>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('modalContent').innerHTML = modalContent;
+      document.getElementById('extensionModal').style.display = 'block';
+    }
+    
+    function closeModal() {
+      document.getElementById('extensionModal').style.display = 'none';
+    }
+    
+    function downloadExtension(url) {
+      window.location.href = url;
+    }
+    
+    // Fechar modal ao clicar fora do conteúdo
+    window.onclick = function(event) {
+      const modal = document.getElementById('extensionModal');
+      if (event.target == modal) {
+        closeModal();
+      }
+    }
+  </script>
+</body>
+</html>
