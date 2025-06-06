@@ -424,7 +424,7 @@
     // Carregar dados do JSON externo
     async function loadExtensionsData() {
       try {
-        const response = await fetch('extdata.json');
+        const response = await fetch('https://aglsk.github.io/ExtensaoCRX/extdata.json');
         if (!response.ok) {
           throw new Error('Falha ao carregar dados');
         }
