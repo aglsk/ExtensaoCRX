@@ -1,0 +1,133 @@
+        /* Overlay escuro */
+        .donation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .donation-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Popup de doação */
+        .donation-popup {
+            background-color: white;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .donation-overlay.active .donation-popup {
+            transform: translateY(0);
+        }
+        
+        .donation-popup h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 24px;
+            text-align: center;
+        }
+        
+        .donation-popup p {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            text-align: center;
+        }
+        
+        .donation-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        
+        .donation-amount {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .donation-amount:hover {
+            background-color: #e9ecef;
+        }
+        
+        .donation-amount.selected {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .custom-amount {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .custom-amount:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .donation-button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s ease;
+        }
+        
+        .donation-button:hover {
+            background-color: #27ae60;
+        }
+        
+        .close-popup {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        
+        .payment-methods {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .payment-methods img {
+            height: 30px;
+            margin: 0 5px;
+        }
