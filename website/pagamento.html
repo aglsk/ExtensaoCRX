@@ -275,7 +275,7 @@
         async function generatePixCode() {
             try {
                 const chave = 'nbressy021@gmail.com'; // Sua chave PIX
-                const apiUrl = `https://apiutilities.vercel.app/pix?chave=${chave}&nome=${encodeURIComponent(nome)}&valor=${valor}&mensagem=${encodeURIComponent(mensagem)}`;
+                const apiUrl = `https://apiutilities.vercel.app/api/proxy?url=https://apiutilities.vercel.app/pix?chave=${chave}&nome=${encodeURIComponent(nome)}&valor=${valor}&mensagem=${encodeURIComponent(mensagem)}`;
                 
                 const response = await fetch(apiUrl);
                 const data = await response.json();
@@ -316,16 +316,16 @@
         // Botão "Já efetuei o pagamento"
         document.getElementById('paidBtn').addEventListener('click', (e) => {
             e.preventDefault();
-            alert("Obrigado por sua doação! Em breve enviaremos um e-mail de confirmação.");
+            alert("Envie o Comprovante Para Nós Fazer a confirmação do seu pagamento.");
             // Aqui você pode redirecionar para uma página de agradecimento
-            // window.location.href = "/obrigado";
+            window.location.href = "https://wa.me/+5521976402296";
         });
         
         // Botão "Cancelar doação"
         document.getElementById('cancelBtn').addEventListener('click', (e) => {
             e.preventDefault();
-            if (confirm("Tem certeza que deseja cancelar esta doação?")) {
-                window.location.href = "/"; // Redirecionar para a página inicial
+            if (confirm("Tem certeza que deseja cancelar?")) {
+                window.location.href = "/ExtensaoCRX"; // Redirecionar para a página inicial
             }
         });
     </script>
